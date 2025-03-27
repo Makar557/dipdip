@@ -1,0 +1,44 @@
+﻿@page
+@model Dip.Pages.Restaurant.RegisterModel
+@{
+    ViewData["Title"] = "Регистрация ресторана";
+}
+<head>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Регистрация ресторана</h2>
+    <form method="post" class="mt-4">
+        <div class="mb-3">
+            <label for="name" class="form-label">Название</label>
+            <input type="text" class="form-control" id="name" asp-for="Name" placeholder="Введите название ресторана" required />
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label">Описание</label>
+            <textarea class="form-control" id="description" asp-for="Description" rows="3" placeholder="Введите описание"></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="address" class="form-label">Адрес</label>
+            <input type="text" class="form-control" id="address" asp-for="Address" placeholder="Введите адрес" required />
+        </div>
+        <div class="mb-3">
+            <label for="phone" class="form-label">Телефон</label>
+            <input type="text" class="form-control" id="phone" asp-for="Phone" placeholder="Введите номер телефона" required />
+        </div>
+        <div class="mb-3">
+            <label for="startTime" class="form-label">Начало работы</label>
+            <input type="time" class="form-control" id="startTime" asp-for="StartTime" required />
+        </div>
+        <div class="mb-3">
+            <label for="hoursPerDay" class="form-label">Количество часов в день</label>
+            <input type="number" class="form-control" id="hoursPerDay" asp-for="HoursPerDay" min="1" max="24" placeholder="Введите количество часов работы" required />
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Зарегистрировать</button>
+    </form>
+    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+    {
+        <div class="alert alert-danger mt-3">
+            @Model.ErrorMessage
+        </div>
+    }
+</div>

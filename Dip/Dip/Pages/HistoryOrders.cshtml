@@ -1,0 +1,67 @@
+﻿@page
+@model Dip.Pages.HistoryOrdersModel
+@{
+    ViewData["Title"] = "История заказов";
+}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+    <header class="bg-white shadow-md p-4 flex justify-between items-center">
+        <h1 class="text-2xl font-bold text-gray-800">История заказов</h1>
+        <a href="/MyOrders" class="bg-blue-500 text-white px-4 py-2 rounded-md">Назад к заказам</a>
+    </header>
+
+    <main class="p-8">
+        @if (Model.OrdersByMonth.Any())
+        {
+            @foreach (var month in Model.OrdersByMonth)
+            {
+                <section class="mb-8">
+                    <h2 class="text-xl font-bold text-gray-800">@month.Key.ToString("MMMM yyyy")</h2>
+                    <p class="text-gray-600">Потрачено за месяц: <span class="font-bold">@month.Value.Sum(o => o.ИтоговаяСтоимость) ₽</span></p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                        @foreach (var order in month.Value)
+                        {
+                            <div class="bg-white shadow-md rounded-lg p-4">
+                                <p><strong>Адрес доставки:</strong> @order.АдресДоставки</p>
+                                <p><strong>Сумма:</strong> @order.ИтоговаяСтоимость ₽</p>
+                                <p><strong>Дата заказа:</strong> @order.ДатаСоздания?.ToString("dd.MM.yyyy")</p>
+                            </div>
+                            <form method="post" asp-page-handler="RateRestaurant">
+                                <input type="hidden" name="ресторанId" value="@order.РесторанId" />
+                                <input type="hidden" name="заказId" value="@order.Id" />
+                                <label class="block mt-2 text-gray-800">Оцените ресторан:</label>
+                                <select name="оценка" class="border border-gray-300 rounded-md p-2">
+                                    <option value="1">1 - Плохо</option>
+                                    <option value="2">2 - Так себе</option>
+                                    <option value="3">3 - Нормально</option>
+                                    <option value="4">4 - Хорошо</option>
+                                    <option value="5">5 - Отлично</option>
+                                </select>
+                                <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-md ml-2 mt-2">Оценить</button>
+                            </form>
+
+                        }
+                    </div>
+                </section>
+            }
+        }
+        else
+        {
+            <p class="text-gray-600 text-center">У вас пока нет завершенных заказов.</p>
+        }
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 text-center mt-8">
+        <p>&copy; 2025 Food Delivery. Все права защищены.</p>
+    </footer>
+</body>
+</html>

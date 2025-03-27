@@ -1,0 +1,102 @@
+﻿@page
+@model Dip.Pages.IndexModel
+@{
+    ViewData["Title"] = "Главная страница";
+}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+    <header class="bg-white shadow-md p-4 flex justify-between items-center">
+        <h1 class="text-2xl font-bold text-gray-800">Food Delivery</h1>
+
+        <div>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <span class="text-gray-800">Привет, @User.Identity.Name!</span>
+                <a href="/Account/Logout" class="bg-red-500 text-white px-4 py-2 rounded-md ml-2">Выйти</a>
+                <a href="/Cart" class="bg-orange-500 text-white px-4 py-2 rounded-md ml-2">Корзина</a>
+                <a href="/MyOrders" class="bg-orange-500 text-white px-4 py-2 rounded-md ml-2">Мои заказы</a>
+            }
+            else
+            {
+                <a href="/Account/Login" class="bg-blue-500 text-white px-4 py-2 rounded-md mr-2">Войти</a>
+                <a href="/Account/Register" class="bg-green-500 text-white px-4 py-2 rounded-md">Зарегистрироваться</a>
+            }
+        </div>
+    </header>
+
+    <main class="p-8">
+        <section class="text-center mb-12">
+            <form method="post" class="inline-flex">
+                <input type="text" name="SearchQuery" placeholder="Найдите ресторан или блюдо..." class="border border-gray-300 rounded-md p-3 w-2/3 text-lg" value="@Model.SearchQuery" />
+                <button type="submit" class="bg-blue-500 text-white px-6 py-3 rounded-md ml-2">Найти</button>
+            </form>
+        </section>
+
+        <section>
+            <h3 class="text-2xl font-bold text-gray-800 mb-4">Рестораны</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                @foreach (var restaurant in Model.Restaurants)
+                {
+                    <div class="bg-white shadow-md rounded-lg overflow-hidden cursor-pointer" onclick="window.location='/Restaurant/Details/@restaurant.Id'">
+                        <div class="h-48 bg-gray-200 flex justify-center items-center">
+                            @if (!string.IsNullOrEmpty(restaurant.Логотип))
+                            {
+                                <img src="@restaurant.Логотип" alt="Логотип ресторана" class="h-full object-cover w-full">
+                            }
+                            else
+                            {
+                                <span class="text-gray-500">Нет логотипа</span>
+                            }
+                        </div>
+
+                        <div class="p-4">
+                            <h4 class="text-lg font-bold text-gray-800">@restaurant.Название</h4>
+                            <p class="text-gray-600">@restaurant.Описание</p>
+                            <p class="text-yellow-500 font-bold mt-2">
+                                @restaurant.Рейтинг
+                                @for (int i = 0; i < (restaurant.Рейтинг ?? 0); i++)
+                                {
+                                    <span>⭐</span>
+                                }
+                            </p>
+
+                            @if (restaurant.Менюs.Any())
+                            {
+                                <div class="mt-4">
+                                    <h5 class="text-md font-semibold text-gray-800">Меню:</h5>
+                                    <ul>
+                                        @foreach (var menuItem in restaurant.Менюs.Take(3))
+                                        {
+                                            <li class="text-gray-600">@menuItem.Название - @menuItem.Цена ₽</li>
+                                        }
+                                    </ul>
+                                </div>
+                            }
+                            else
+                            {
+                                <p class="text-gray-600">Меню отсутствует</p>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 text-center mt-8">
+        <p>&copy; 2025 Food Delivery. Все права защищены.</p>
+        <p>
+            <a href="/Privacy" class="text-blue-400 hover:text-blue-600">Политика конфиденциальности</a>
+        </p>
+    </footer>
+</body>
+</html>

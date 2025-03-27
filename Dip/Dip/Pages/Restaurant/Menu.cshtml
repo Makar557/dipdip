@@ -1,0 +1,169 @@
+﻿@page
+@model Dip.Pages.Restaurant.MenuModel
+@{
+    ViewData["Title"] = "Управление меню";
+}
+<head>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Управление меню</h2>
+    <a class="btn btn-secondary mb-4" href="/Restaurant/Dashboard">Вернуться назад</a>
+    <div class="alert alert-info text-center">
+        Добро пожаловать, <strong>@Model.RestaurantName</strong>!
+    </div>
+
+    <div class="card shadow-sm my-4">
+        <div class="card-body">
+            <h5 class="card-title">Добавить новое блюдо</h5>
+            <form method="post" asp-page-handler="AddMenuItem" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label for="Название" class="form-label">Название</label>
+                    <input type="text" class="form-control" id="Название" name="Название" required>
+                </div>
+                <div class="mb-3">
+                    <label for="Описание" class="form-label">Описание</label>
+                    <textarea class="form-control" id="Описание" name="Описание"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="Цена" class="form-label">Цена</label>
+                    <input type="number" class="form-control" id="Цена" name="Цена" step="0.01" required>
+                </div>
+                <div class="mb-3">
+                    <label for="Фото" class="form-label">Загрузить фото</label>
+                    <input type="file" class="form-control" id="Фото" name="Фото" accept="image/*" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Добавить</button>
+            </form>
+        </div>
+    </div>
+
+    <h5>Текущее меню</h5>
+    @if (Model.MenuItems.Count == 0)
+    {
+        <div class="alert alert-warning">Меню пока пустое.</div>
+    }
+    else
+    {
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Фото</th>
+            <th>Название</th>
+            <th>Описание</th>
+            <th>Цена</th>
+            <th>Доступность</th>
+            <th>Действия</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.MenuItems)
+        {
+            <tr>
+                <td>
+                    @if (!string.IsNullOrEmpty(item.СсылкаНаИзображение))
+                    {
+                        <img src="@item.СсылкаНаИзображение" alt="Фото блюда" style="width: 80px; height: 80px; object-fit: cover;">
+                    }
+                </td>
+                <td>@item.Название</td>
+                <td>@item.Описание</td>
+                <td>@item.Цена</td>
+                <td>@(item.Доступность ? "Доступно" : "Недоступно")</td>
+                <td>
+                    <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#editMenuItemModal"
+                       data-id="@item.Id"
+                       data-name="@item.Название"
+                       data-description="@item.Описание"
+                       data-price="@item.Цена"
+                       data-image="@item.СсылкаНаИзображение">
+                        <button class="btn btn-sm btn-warning">Редактировать</button>
+                    </a>
+
+                    <form method="post" asp-page-handler="DeleteMenuItem" class="d-inline">
+                        <input type="hidden" name="Id" value="@item.Id" />
+                        <button class="btn btn-sm btn-danger">Удалить</button>
+                    </form>
+
+                    <form method="post" asp-page-handler="ToggleAvailability" class="d-inline">
+                        <input type="hidden" name="Id" value="@item.Id" />
+                        <button class="btn btn-sm @(item.Доступность ? "btn-danger" : "btn-success")">
+                            @(item.Доступность ? "Сделать недоступным" : "Сделать доступным")
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+    }
+</div>
+
+<div class="modal fade" id="editMenuItemModal" tabindex="-1" aria-labelledby="editMenuItemModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editMenuItemModalLabel">Редактировать блюдо</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" asp-page-handler="EditMenuItem" enctype="multipart/form-data">
+                    <input type="hidden" id="EditId" name="Id" />
+                    <div class="mb-3">
+                        <label for="EditНазвание" class="form-label">Название</label>
+                        <input type="text" class="form-control" id="EditНазвание" name="Название" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="EditОписание" class="form-label">Описание</label>
+                        <textarea class="form-control" id="EditОписание" name="Описание"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="EditЦена" class="form-label">Цена</label>
+                        <input type="number" class="form-control" id="EditЦена" name="Цена" step="0.01" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="EditФото" class="form-label">Загрузить новое фото</label>
+                        <input type="file" class="form-control" id="EditФото" name="Фото" accept="image/*">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Текущее изображение</label>
+                        <br>
+                        <img id="EditCurrentImage" src="" alt="Текущее фото блюда" style="width: 100px; height: 100px; object-fit: cover;">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var editMenuItemModal = document.getElementById('editMenuItemModal');
+    editMenuItemModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget;
+        var id = button.getAttribute('data-id');
+        var name = button.getAttribute('data-name');
+        var description = button.getAttribute('data-description');
+        var price = button.getAttribute('data-price');
+        var image = button.getAttribute('data-image');
+
+        var modalId = editMenuItemModal.querySelector('#EditId');
+        var modalName = editMenuItemModal.querySelector('#EditНазвание');
+        var modalDescription = editMenuItemModal.querySelector('#EditОписание');
+        var modalPrice = editMenuItemModal.querySelector('#EditЦена');
+        var modalCurrentImage = editMenuItemModal.querySelector('#EditCurrentImage');
+
+        modalId.value = id;
+        modalName.value = name;
+        modalDescription.value = description;
+        modalPrice.value = price;
+
+        if (image) {
+            modalCurrentImage.src = image;
+        } else {
+            modalCurrentImage.src = "https://via.placeholder.com/100";
+        }
+    });
+</script>
+

@@ -1,0 +1,103 @@
+﻿@page
+@model FoodDeliveryApp.Pages.Courier.CourierDashboardModel
+@{
+    ViewData["Title"] = "Курьерская панель";
+}
+<head>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<div class="container mt-5">
+    <h2 class="text-center">Курьерская панель</h2>
+
+    <h3 class="mt-4">Доступные заказы</h3>
+    <table class="table table-bordered mt-2">
+        <thead>
+            <tr>
+                <th>Адрес ресторана</th>
+                <th>Плата за заказ</th>
+                <th>Действие</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in Model.DostupnyeZakazy)
+            {
+                <tr>
+                    <td>
+                            <span>Адрес будет виден после принятия заказа</span>
+                    </td>
+                    <td><span>Стоимость будет видна после принятия заказа</span></td> 
+                    <td>
+                        @if (Model.MoiZakazy.Count == 0 && order.КурьерId == null)
+                        {
+                            <form method="post" asp-page-handler="PrinyatZakaz">
+                                <input type="hidden" name="orderId" value="@order.Id" />
+                                <button type="submit" class="btn btn-success">Принять</button>
+                            </form>
+                        }
+                        else
+                        {
+                            <span class="text-muted">Максимум заказов</span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <h3 class="mt-4">Мои заказы</h3>
+    <div class="mt-4">
+        <a href="/Courier/OrderHistory" class="btn btn-secondary">История заказов</a>
+    </div>
+    <table class="table table-bordered mt-2">
+        <thead>
+            <tr>
+                <th>Адрес ресторана</th>
+                <th>Адрес доставки</th>
+                <th>Стоимость</th>
+                <th>Телефон ресторана</th>
+                <th>Название ресторана</th>
+                <th>Статус</th>
+                <th>Действие</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in Model.MoiZakazy)
+            {
+                <tr>
+                    @if (order.Статус == "приготовлен" || order.Статус == "ожидает" || order.Статус == "оплачено")
+                    {
+                    <td>@order.Ресторан.Адрес</td>
+                    <td>@order.АдресДоставки</td>
+                    <td>@(order.ИтоговаяСтоимость) ₽</td>
+                    <td>@order.Ресторан.Телефон</td>
+                    <td>@order.Ресторан.Название</td>
+                    <td>@order.Статус</td>
+                        if (order.Статус == "приготовлен")
+                        {
+                    <td>
+                            <form method="post" asp-page-handler="StartDelivery">
+                                <input type="hidden" name="orderId" value="@order.Id" />
+                                <button type="submit" class="btn btn-warning">Получил</button>
+                            </form>
+                            </td>
+                        }
+                        else
+                        {
+                            <td>
+                                <span>Заказ еще не готов</span>
+                            </td>
+                        }
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="mt-4">
+        <a href="/Courier/MyDeliveries" class="btn btn-primary">Мои доставки</a>
+    </div>
+    <div class="mt-4">
+        <a href="/Courier/Balance" class="btn btn-info">Баланс</a>
+    </div>
+
+</div>

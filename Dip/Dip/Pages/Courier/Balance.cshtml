@@ -1,0 +1,12 @@
+﻿@page
+@model Dip.Pages.Courier.BalanceModel
+@{
+    ViewData["Title"] = "Баланс курьера";
+}
+<div class="max-w-lg mx-auto p-6 bg-white shadow-md rounded-lg mt-6">
+    <h2 class="text-3xl font-semibold text-gray-900 mb-4">Баланс</h2>
+    <p class="text-lg">Ваш текущий баланс: <strong>@Model.Баланс руб.</strong></p>
+</div>
+<div class="alert alert-@(Model.Баланс < 0 ? "danger" : "primary") mt-3 text-center">
+    <h3>Текущий баланс: @(Model.Баланс < 0 ? $"{Model.Баланс} ₽ (Долг)" : $"{Model.Баланс} ₽")</h3>
+</div>

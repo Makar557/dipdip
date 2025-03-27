@@ -1,0 +1,68 @@
+﻿@page
+@model Dip.Pages.Admin.AdminDashboardModel
+@{
+    ViewData["Title"] = "Панель администратора";
+}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Панель администратора</h2>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Пользователи</h5>
+                    <p class="card-text">Управление пользователями</p>
+                    <a href="/Admin/Users" class="btn btn-primary w-100">Перейти</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Рестораны</h5>
+                    <p class="card-text">Управление ресторанами</p>
+                    <a href="/Admin/Restaurants" class="btn btn-primary w-100">Перейти</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Меню</h5>
+                    <p class="card-text">Управление меню ресторанов</p>
+                    <a href="/Admin/Menu" class="btn btn-primary w-100">Перейти</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Заказы</h5>
+                    <p class="card-text">Просмотр и изменение заказов</p>
+                    <a href="/Admin/Orders" class="btn btn-primary w-100">Перейти</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Корзины</h5>
+                    <p class="card-text">Управление корзинами пользователей</p>
+                    <a href="/Admin/Carts" class="btn btn-primary w-100">Перейти</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Оценки</h5>
+                    <p class="card-text">Просмотр оценок ресторанов</p>
+                    <a href="/Admin/Ratings" class="btn btn-primary w-100">Перейти</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

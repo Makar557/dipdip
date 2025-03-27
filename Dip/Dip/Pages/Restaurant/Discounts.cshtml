@@ -1,0 +1,72 @@
+﻿@page
+@model Dip.Pages.Restaurant.DiscountsModel
+@{
+    ViewData["Title"] = "Управление скидками";
+}
+<head>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Управление скидками</h2>
+
+    <form method="post">
+        <div class="mb-3">
+            <label for="БлюдоId" class="form-label">Выберите блюдо</label>
+            <select id="БлюдоId" name="БлюдоId" class="form-select">
+                @foreach (var блюдо in Model.Блюда)
+                {
+                    <option value="@блюдо.Id">@блюдо.Название</option>
+                }
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="ПроцентСкидки" class="form-label">Процент скидки</label>
+            <input type="number" id="ПроцентСкидки" name="ПроцентСкидки" class="form-control" min="1" max="100" required />
+        </div>
+
+        <div class="mb-3">
+            <label for="ДатаНачала" class="form-label">Дата начала</label>
+            <input type="date" id="ДатаНачала" name="ДатаНачала" class="form-control" required />
+        </div>
+
+        <div class="mb-3">
+            <label for="ДатаОкончания" class="form-label">Дата окончания</label>
+            <input type="date" id="ДатаОкончания" name="ДатаОкончания" class="form-control" required />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Добавить скидку</button>
+    </form>
+
+    <hr />
+
+    <h3 class="mt-4">Текущие скидки</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Блюдо</th>
+                <th>Процент скидки</th>
+                <th>Дата начала</th>
+                <th>Дата окончания</th>
+                <th>Действие</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var скидка in Model.Скидки)
+            {
+                <tr>
+                    <td>@скидка.Меню.Название</td>
+                    <td>@скидка.ПроцентСкидки%</td>
+                    <td>@скидка.ДатаНачала.ToShortDateString()</td>
+                    <td>@скидка.ДатаОкончания.ToShortDateString()</td>
+                    <td>
+                        <form method="post" asp-page-handler="Delete">
+                            <input type="hidden" name="СкидкаId" value="@скидка.Id" />
+                            <button type="submit" class="btn btn-danger">Удалить</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

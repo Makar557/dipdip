@@ -1,0 +1,106 @@
+﻿@page "{id:int}"
+@model Dip.Pages.Restaurant.DetailsModel
+@{
+    ViewData["Title"] = Model.Restaurant?.Название ?? "Ресторан не найден";
+}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+
+    <header class="bg-white shadow-md p-4 flex justify-between items-center">
+        <h1 class="text-2xl font-bold text-gray-800">
+            @(Model.Restaurant != null ? Model.Restaurant.Название : "Ресторан не найден")
+        </h1>
+    </header>
+
+    <main class="p-8">
+        <section class="mb-8">
+            <h3 class="text-xl font-bold text-gray-800">Информация о ресторане</h3>
+
+            @if (Model.Restaurant != null)
+            {
+                <p class="text-gray-600 mt-2">@Model.Restaurant.Описание</p>
+                <p class="mt-2">Адрес: @Model.Restaurant.Адрес</p>
+                <p class="mt-2">Телефон: @Model.Restaurant.Телефон</p>
+                <p class="mt-2">Рейтинг: @(Model.Restaurant.Рейтинг.HasValue ? Model.Restaurant.Рейтинг : 0)</p>
+                <p class="mt-2">Время работы: @Model.WorkingHours</p>
+            }
+            else
+            {
+                <p class="text-red-500">Информация о ресторане недоступна.</p>
+            }
+        </section>
+
+        <section class="mt-8">
+            <h3 class="text-xl font-bold text-gray-800">Меню</h3>
+
+            @if (Model.MenuItems != null && Model.MenuItems.Any())
+            {
+                @foreach (var item in Model.MenuItems.OrderByDescending(i => i.Скидкиs != null))
+                {
+                    <li class="mb-4 flex items-center bg-white shadow-md rounded-lg p-4">
+
+                        @if (!string.IsNullOrEmpty(item.СсылкаНаИзображение))
+                        {
+                            <img src="@item.СсылкаНаИзображение" alt="@item.Название"
+                                 class="w-24 h-24 object-cover rounded-md mr-4">
+                        }
+                        else
+                        {
+                            <img src="/images/no-image.png" alt="Нет изображения"
+                                 class="w-24 h-24 object-cover rounded-md mr-4">
+                        }
+
+                        <div class="flex-grow">
+                            <p class="text-lg font-bold text-gray-800">@item.Название</p>
+                            <p class="text-gray-600">@item.Описание</p>
+
+                            @if (item.АктуальнаяСкидка != null)
+                            {
+                                <p class="text-gray-500 line-through">@item.Цена ₽</p>
+                                <p class="text-red-500 font-bold">
+                                    @((item.Цена * (1 - item.АктуальнаяСкидка.ПроцентСкидки / 100)).ToString("0.00")) ₽
+                                </p>
+                                <span class="text-green-600 font-semibold">Скидка @item.АктуальнаяСкидка.ПроцентСкидки %</span>
+                            }
+                            else
+                            {
+                                <p class="text-yellow-500 font-bold">@item.Цена ₽</p>
+                            }
+
+                        </div>
+                        <form method="post">
+                            <input type="hidden" name="dishId" value="@item.Id" />
+                            <button type="submit"
+                                    class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">
+                                В корзину
+                            </button>
+                        </form>
+                    </li>
+                }
+            }
+            else
+            {
+                <p class="text-gray-600">Меню пока пусто.</p>
+            }
+        </section>
+    </main>
+
+    <div class="text-center mt-8">
+        <a href="/Index" class="inline-block bg-gray-300 text-gray-700 px-4 py-2 rounded-md border border-gray-400 hover:bg-gray-400 transition">
+            ← Назад
+        </a>
+    </div>
+
+    <footer class="bg-gray-800 text-white p-4 text-center mt-8">
+        <p>&copy; 2025 Food Delivery. Все права защищены.</p>
+    </footer>
+</body>
+</html>

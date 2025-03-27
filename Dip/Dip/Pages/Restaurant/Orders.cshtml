@@ -1,0 +1,86 @@
+﻿@page
+@model Dip.Pages.Restaurant.OrdersModel
+@{
+    ViewData["Title"] = "Заказы ресторана";
+}
+@using Dip.Models
+
+<head>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Заказы ресторана @Model.RestaurantName</h2>
+
+    @if (Model.OrdersGroupedByMonth.Count == 0)
+    {
+        <div class="alert alert-info text-center">Заказов пока нет.</div>
+    }
+    else
+    {
+        @foreach (var monthGroup in Model.OrdersGroupedByMonth)
+        {
+            <h3 class="text-center">Месяц: @monthGroup.Key</h3>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Адрес доставки</th>
+                        <th>Статус</th>
+                        <th>Дата создания</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var order in monthGroup.Value)
+                    {
+                        <tr>
+                            <td>@order.АдресДоставки</td>
+                            <td>@order.Статус</td>
+                            <td>@(order.ДатаСоздания?.ToString("dd.MM.yyyy HH:mm") ?? "Не указано")</td>
+                            <td>
+                                <button class="btn btn-info" onclick="toggleDetails(@order.Id)">Подробнее</button>
+                            </td>
+                            <td>
+                                @if (order.Статус == "ожидает" || order.Статус == "оплачено")
+                                {
+                                    <form method="post" asp-page-handler="ChangeStatus">
+                                        <input type="hidden" name="orderId" value="@order.Id" />
+                                        <button type="submit" class="btn btn-success">Приготовлен</button>
+                                    </form>
+                                }
+                            </td>
+
+                        </tr>
+                        <tr id="details-@order.Id" style="display: none;">
+                            <td colspan="5">
+                                <ul>
+                                    @{
+                                        var orderItemsDict = ViewData["OrderItems"] as Dictionary<int, List<СоставЗаказа>>;
+                                        if (orderItemsDict != null && orderItemsDict.ContainsKey(order.Id))
+                                        {
+                                            foreach (var item in orderItemsDict[order.Id])
+                                            {
+                                                <li>@item.Блюдо.Название - @item.Количество шт. - @item.Цена ₽</li>
+                                            }
+                                        }
+                                    }
+                                </ul>
+                            </td>
+                        </tr>
+                    }
+                    <script>
+                        function toggleDetails(orderId) {
+                            var detailsRow = document.getElementById("details-" + orderId);
+                            if (detailsRow.style.display === "none") {
+                                detailsRow.style.display = "table-row";
+                            } else {
+                                detailsRow.style.display = "none";
+                            }
+                        }
+                    </script>
+
+                </tbody>
+
+            </table>
+        }
+    }
+</div>

@@ -1,0 +1,53 @@
+﻿@page
+@model Dip.Pages.Restaurant.DashboardModel
+@{
+    ViewData["Title"] = "Панель ресторана";
+}
+<head>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Панель ресторана</h2>
+    <div class="alert alert-primary text-center">
+        Добро пожаловать, <strong>@Model.RestaurantName</strong>!
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Управление меню</h5>
+                    <p class="card-text">Настройте блюда и предложения вашего ресторана.</p>
+                    <a href="/Restaurant/Menu" class="btn btn-primary w-100">Перейти к управлению меню</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mt-4">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Редактировать ресторан</h5>
+                    <p class="card-text">Обновите информацию и изображение вашего ресторана.</p>
+                    <a href="/Restaurant/Edit" class="btn btn-warning w-100">Редактировать ресторан</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Заказы</h5>
+                    <p class="card-text">Просмотрите и управляйте заказами клиентов.</p>
+                    <a href="/Restaurant/Orders" class="btn btn-success w-100">Просмотреть заказы</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mt-4">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Управление скидками</h5>
+                    <p class="card-text">Настройте скидки на ваши блюда.</p>
+                    <a href="/Restaurant/Discounts" class="btn btn-danger w-100">Настроить скидки</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,45 @@
+﻿@page
+@model Dip.Pages.Cart.CheckoutModel
+@{
+    ViewData["Title"] = "Оформление заказа";
+}
+<head>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<div class="max-w-lg mx-auto p-6 bg-white shadow-md rounded-lg mt-6">
+    <h2 class="text-3xl font-semibold text-gray-900 mb-4">Оформление заказа</h2>
+
+    <form method="post" class="space-y-4">
+        <div>
+            <label class="block text-gray-700 font-medium">Адрес доставки</label>
+            <input type="text" asp-for="АдресДоставки" required
+                   class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        </div>
+
+        <div>
+            <label class="block text-gray-700 font-medium">Квартира</label>
+            <input type="text" asp-for="Квартира" required
+                   class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        </div>
+
+        <div>
+            <label class="block text-gray-700 font-medium">Способ оплаты</label>
+            <select asp-for="СпособОплаты"
+                    class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <option value="наличные">Наличные</option>
+                <option value="карта">Карта</option>
+            </select>
+        </div>
+
+        <div class="flex space-x-4">
+            <button type="submit"
+                    class="w-full bg-blue-600 hover:bg-blue-700 text-white text-lg px-6 py-3 rounded-lg">
+                Оформить
+            </button>
+            <button type="submit" name="payNow" value="true"
+                    class="w-full bg-green-600 hover:bg-green-700 text-white text-lg px-6 py-3 rounded-lg">
+                Оплатить сразу
+            </button>
+        </div>
+    </form>
+</div>

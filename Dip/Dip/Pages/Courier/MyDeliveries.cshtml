@@ -1,0 +1,54 @@
+﻿@page
+@model FoodDeliveryApp.Pages.Courier.MyDeliveriesModel
+@{
+    ViewData["Title"] = "Мои доставки";
+}
+<head>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<div class="container mt-5">
+    <h2 class="text-center">Мои доставки</h2>
+
+    <table class="table table-bordered mt-2">
+        <thead>
+            <tr>
+                <th>Адрес доставки</th>
+                <th>Квартира</th>
+                <th>Адрес ресторана</th>
+                <th>Стоимость</th>
+                <th>Статус</th>
+                <th>Название ресторана</th>
+                <th>Телефон клиента</th>
+                <th>Телефон ресторана</th>
+                <th>Действие</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in Model.MoiZakazy)
+            {
+                <tr>
+                    @if (order.Статус == "доставлен" || order.Статус == "получен курьером")
+                    {
+                    <td>@order.АдресДоставки</td>
+                    <td>@order.Квартира</td>
+                    <td>@order.Ресторан.Адрес</td>
+                    <td>@(order.ИтоговаяСтоимость) ₽</td>
+                    <td>@order.Статус</td>
+                    <td>@order.Ресторан.Название</td>
+                        <td>@order.Клиент.Телефон</td>
+                    <td>@order.Ресторан.Телефон</td>
+                    <td>
+                        @if (order.Статус == "получен курьером")
+                        {
+                            <form method="post" asp-page-handler="Deliverd">
+                                <input type="hidden" name="orderId" value="@order.Id" />
+                                <button type="submit" class="btn btn-success">Доставлено</button>
+                            </form>
+                        }
+                    </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

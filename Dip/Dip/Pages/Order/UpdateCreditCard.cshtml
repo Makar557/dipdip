@@ -1,0 +1,28 @@
+﻿@page
+@model Dip.Pages.Order.UpdateCreditCardModel
+@{
+    ViewData["Title"] = "Обновить кредитную карту";
+}
+
+<head>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<div class="max-w-lg mx-auto p-6 bg-white shadow-md rounded-lg mt-6">
+    <h2 class="text-3xl font-semibold text-gray-900 mb-4">Обновите свою кредитную карту</h2>
+
+    <form method="post" class="space-y-4">
+        <div>
+            <label class="block text-gray-700 font-medium">Номер карты</label>
+            <input type="text" asp-for="CreditCardNumber" required
+                   class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        </div>
+
+        <div class="flex space-x-4">
+            <button type="submit"
+                    class="w-full bg-blue-600 hover:bg-blue-700 text-white text-lg px-6 py-3 rounded-lg">
+                Обновить карту
+            </button>
+        </div>
+    </form>
+</div>

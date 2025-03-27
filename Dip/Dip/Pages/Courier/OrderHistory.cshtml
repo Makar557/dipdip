@@ -1,0 +1,48 @@
+﻿@page
+@model Dip.Pages.Courier.OrderHistoryModel
+@{
+    ViewData["Title"] = "История заказов";
+}
+<head>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<div class="container mt-5">
+    <h2 class="text-center mb-4">История заказов курьера</h2>
+
+    @if (Model.OrdersGroupedByMonth.Count == 0)
+    {
+        <div class="alert alert-info text-center">У вас пока нет заказов.</div>
+    }
+    else
+    {
+        @foreach (var monthGroup in Model.OrdersGroupedByMonth)
+        {
+            <h3 class="text-center">Месяц: @monthGroup.Key</h3>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Адрес ресторана</th>
+                        <th>Название ресторана</th>
+                        <th>Адрес доставки</th>
+                        <th>Стоимость</th>
+                        <th>Дата доставки</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var order in monthGroup.Value)
+                    {
+                        <tr>
+                            <td>@order.Ресторан.Адрес</td>
+                            <td>@order.Ресторан.Название</td>
+                            <td>@order.АдресДоставки</td>
+                            <td>@(order.ИтоговаяСтоимость) ₽</td>
+                            <td>@(order.ДатаДоставки?.ToString("dd.MM.yyyy HH:mm") ?? "Не указано")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <h4 class="text-center">Итоговая сумма за месяц: @Model.TotalEarningsByMonth[monthGroup.Key] ₽</h4>
+        }
+    }
+</div>

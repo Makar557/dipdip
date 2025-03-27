@@ -1,0 +1,24 @@
+﻿@page "{orderId}"
+@model Dip.Pages.Order.SuccessModel
+@{
+    ViewData["Title"] = "Заказ оформлен";
+}
+<head>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<div class="max-w-lg mx-auto p-6 bg-white shadow-md rounded-lg mt-6 text-center">
+    <h2 class="text-3xl font-semibold text-gray-900 mb-4">Заказ №@Model.OrderId успешно оформлен!</h2>
+
+    @if (Model.IsPaid)
+    {
+        <p class="text-green-600 text-lg font-medium">Оплата прошла успешно. Ваш заказ уже в обработке!</p>
+    }
+    else
+    {
+        <p class="text-gray-600 text-lg">Вы выбрали оплату при получении. Ожидайте доставку.</p>
+    }
+
+    <a href="/" class="block mt-6 bg-gray-800 hover:bg-gray-900 text-white text-lg px-6 py-3 rounded-lg">
+        Вернуться на главную
+    </a>
+</div>

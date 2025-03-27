@@ -1,0 +1,95 @@
+﻿@page
+@model Dip.Pages.CartModel
+@{
+    ViewData["Title"] = "Корзина";
+}
+
+<head>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<div class="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg">
+
+    <div class="flex justify-between items-center mb-4">
+        <h2 class="text-3xl font-bold text-gray-800">🛒 Ваша корзина</h2>
+        <a href="/" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition">
+            ⬅️ Назад
+        </a>
+    </div>
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <p class="text-red-500 bg-red-100 p-2 rounded mb-4">@TempData["ErrorMessage"]</p>
+    }
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <p class="text-green-500 bg-green-100 p-2 rounded mb-4">@TempData["SuccessMessage"]</p>
+    }
+
+    @if (Model.CartItems.Count > 0)
+    {
+        @if (Model.CartItems.First().Блюдо?.Ресторан != null)
+        {
+            <p class="text-xl font-bold text-gray-800 mb-4">
+                🏬 Заказ из: <span class="text-blue-500">@Model.CartItems.First().Блюдо.Ресторан.Название</span>
+            </p>
+        }
+
+        <table class="w-full border border-gray-300 rounded-lg text-lg">
+            <thead>
+                <tr class="bg-gray-100 text-gray-800">
+                    <th class="p-3">Блюдо</th>
+                    <th class="p-3">Кол-во</th>
+                    <th class="p-3">Цена</th>
+                    <th class="p-3">Удалить</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.CartItems)
+                {
+                    <tr class="border-b">
+                        <td class="p-3">@item.Блюдо.Название</td>
+                        <td class="p-3">@item.Количество</td>
+                        <td class="p-3">@item.Цена ₽</td>
+                        <td class="p-3 text-center">
+                            <form method="post">
+                                <input type="hidden" name="itemId" value="@item.Id" />
+                                <button type="submit" asp-page-handler="RemoveItem" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition">
+                                    ❌
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div class="flex justify-between items-center mt-6">
+            <p class="text-xl font-bold text-gray-800">💰 Итог: @Model.TotalPrice ₽</p>
+            <div class="flex gap-4">
+                <form method="post" asp-page-handler="ClearCart">
+                    <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition">
+                        🗑 Очистить
+                    </button>
+                </form>
+                @if (Model.CanOrder)
+                {
+                    <form method="get" action="/Order/Checkout">
+                        <button type="submit" class="bg-green-500 text-white px-6 py-2 rounded-lg text-lg hover:bg-green-600 transition">
+                            ✅ Оформить заказ
+                        </button>
+                    </form>
+                }
+                else
+                {
+                    <p class="text-red-500 text-lg mt-4">⚠️ В корзине есть блюда из разных ресторанов. Очистите корзину, чтобы оформить заказ.</p>
+                }
+
+            </div>
+        </div>
+    }
+    else
+    {
+        <p class="text-gray-700 text-lg text-center mt-6">Ваша корзина пуста 😔</p>
+    }
+</div>
